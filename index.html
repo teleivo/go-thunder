@@ -6,33 +6,45 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="refresh" content="5" />
         <script>
+            const requests = {};
             const colors = {};
 
             function color(id) {
                 const color = colors[id];
                 if (color) {
-                    return;
+                    return color;
                 }
 
                 // TODO generate/pick color based on id
                 // make this prettier :joy:
                 const c = Math.floor(255 - 42.5 * id);
                 colors[id] = `rgb(${c}, ${c}, 0)`;
+                return colors[id];
             }
 
             function drawRect(ctx, {id, elapsedSeconds}) {
                 ctx.fillStyle = color(id);
-                // TODO keep track of number of requests per elapsedSeconds
-                // and adjust y according to it
-                const pxPerSecond = 15;
-                ctx.fillRect(pxPerSecond * elapsedSeconds, 10, 10, 10);
+
+                const width = 10;
+                const height = 10;
+                const space = 5;
+
+                const x = (width + space) * elapsedSeconds;
+                const count = requests[elapsedSeconds] || 0;
+                const y = (height + space) * count;
+                ctx.fillRect(x, y, width, height);
+
+                requests[elapsedSeconds] = count + 1;
             }
 
             function draw() {
                 const data = [
+                    {id: "1", elapsedSeconds: 0},
+                    {id: "1", elapsedSeconds: 0},
+                    {id: "2", elapsedSeconds: 0},
                     {id: "1", elapsedSeconds: 1},
                     {id: "1", elapsedSeconds: 2},
-                    {id: "1", elapsedSeconds: 2},
+                    {id: "1", elapsedSeconds: 3},
                     {id: "1", elapsedSeconds: 4},
                     {id: "1", elapsedSeconds: 5},
                     {id: "1", elapsedSeconds: 6},
